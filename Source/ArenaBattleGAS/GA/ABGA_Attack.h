@@ -27,6 +27,21 @@ protected:
 
 	UFUNCTION()
 	void OnInterruptedCallback();
+	
+protected:
+	//4-1
+	UPROPERTY()
+	TObjectPtr<class UABComboActionData> CurrentComboData;
+
+	//4-2
+	FName GetNextSection();
+	uint8 CurrentCombo = 0;
+	FTimerHandle ComboTimerHandle;
+	bool HasNextComboInput = false;
+
+	//4-3
+	void StartComboTimer();
+	void CheckComboInput();
 };
 
 
