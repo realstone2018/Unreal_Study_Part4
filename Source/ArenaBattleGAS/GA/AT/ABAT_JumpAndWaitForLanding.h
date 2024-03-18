@@ -17,8 +17,7 @@ public:
 	UABAT_JumpAndWaitForLanding();
 
 	//4-9 OwningAbility를 인자로 받는건 당연한거라 Default로 두고 Hide로 숨겨놓는게 일반적
-	UFUNCTION(BlueprintCallable, Category="Ability|Tasks", meta = (DisplayName="JumAndWaitForLanding",
-		HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
+	UFUNCTION(BlueprintCallable, Category="Ability|Tasks", meta = (DisplayName="JumAndWaitForLanding", HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
 	static UABAT_JumpAndWaitForLanding* CreateTask(UGameplayAbility* OwningAbility);
 
 	virtual void Activate() override;

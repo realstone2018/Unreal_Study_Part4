@@ -20,7 +20,10 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<class UAbilitySystemComponent> ASC;
-	
+	 
+	//6-4
+	UPROPERTY()
+	TObjectPtr<class UABCharacterAttributeSet> AttributeSet;
 };
 
 
