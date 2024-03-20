@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/ABCharacterPlayer.h"
 #include "AbilitySystemInterface.h"
+#include "Abilities/GameplayAbilityTypes.h"
 #include "ABGASCharacterPlayer.generated.h"
 
 UCLASS()
@@ -42,6 +43,28 @@ protected:
 	//3-8 입력에 대한 어빌리티들을 따로 관리, 모든 입력으로 확장할 수 있게 설계 변경
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int32, TSubclassOf<class UGameplayAbility>> StartInputAbilities;
+
+	//8-3
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UABGASWidgetComponent> HpBar;
+
+	//8-7
+	UFUNCTION()
+	virtual void OnOutOfHealth();
+
+	//9-10
+	void EquipWeapon(const FGameplayEventData* EventData);
+	void UnequipWeapon(const FGameplayEventData* EventData);
+
+	//9-11
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	TObjectPtr<class USkeletalMesh> WeaponMesh;
+
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float WeaponRange;	
+
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float WeaponAttackRate;		
 };
 
 

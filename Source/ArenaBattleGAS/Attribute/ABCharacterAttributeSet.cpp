@@ -4,6 +4,7 @@
 #include "Attribute/ABCharacterAttributeSet.h"
 #include "ArenaBattleGAS.h"
 #include "GameplayEffectExtension.h"	//7-9
+#include "Tag/AbGameplayTag.h"	//8-6
 
 UABCharacterAttributeSet::UABCharacterAttributeSet() :
 	AttackRange(100.0f),
@@ -43,7 +44,24 @@ void UABCharacterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attr
 
 bool UABCharacterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
 {
-	return Super::PreGameplayEffectExecute(Data);
+	if (!Super::PreGameplayEffectExecute(Data))
+	{
+		return false;
+	}
+
+	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		if (Data.EvaluatedData.Magnitude > 0.0f)
+		{
+			if (Data.Target.HasMatchingGameplayTag(ABTAG_CHARACTER_INVINSIBLE))
+			{
+				Data.EvaluatedData.Magnitude = 0.0f;
+				return false;
+			}
+		}	
+	}
+	
+	return true;
 }
 
 void UABCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -61,6 +79,16 @@ void UABCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 		SetDamage(0.0f);	//데미지를 계산마다 초기화하지말고 휘발성 데이터로 관리하는게 좋아보임
 	}
+
+	//8-5
+	if(GetHealth() <= 0.0f && !bOutOfHealth)
+	{
+		//8-6 Target에 IsDead 태그를 넣어준다.
+		Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
+		
+		OnOutOfHealth.Broadcast();
+	}
+	bOutOfHealth = (GetHealth() <= 0.0f);
 }
 
 

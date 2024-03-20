@@ -27,6 +27,11 @@ protected:
 
 	//7-12
 	float CurrentLevel;
+
+	//8-16
+	UPROPERTY(EditAnywhere, Category = "GAS")
+	TSubclassOf<class UGameplayEffect> AttackBuffEffect;
+	
 };
 
 

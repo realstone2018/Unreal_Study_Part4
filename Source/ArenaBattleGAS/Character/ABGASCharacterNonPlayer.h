@@ -32,6 +32,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	float Level;
+
+	//8-4
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UABGASWidgetComponent> HpBar;
+
+	//8-7
+	UFUNCTION()
+	virtual void OnOutOfHealth();
 };
 
 

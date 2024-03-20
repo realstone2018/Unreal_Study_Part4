@@ -13,6 +13,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOutOfHealthDelegate);	//8-5
+
 UCLASS()
 class ARENABATTLEGAS_API UABCharacterAttributeSet : public UAttributeSet
 {
@@ -35,6 +37,8 @@ public:
 	//7-8 Attribute Set 변경은 직접 접근이 아닌, 오직 GE를 통해서만 
 	//virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
+	//8-5
+	mutable FOutOfHealthDelegate OnOutOfHealth;	//const에서 예외 (constCast로 다시 캐스팅하는 과정 mutable로 대체)
 	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category="Attack", Meta = (AllowPrivateAccess = true))
@@ -69,10 +73,15 @@ protected:
 	FGameplayAttributeData Damage;
 
 	//7-9
-	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData &Data) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
 
+	//8-5
+	bool bOutOfHealth = false;
 
+	//8-14
+	//GE가 적용되기전 사전처리 작업을 위한 함수
+	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData &Data) override;
+	
 };
 
 

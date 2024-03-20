@@ -75,16 +75,38 @@ void UABGA_AttackHitCheck::OnTraceResultCallback(const FGameplayAbilityTargetDat
 		UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
 		const UABCharacterAttributeSet* SourceAttribute = SourceASC->GetSet<UABCharacterAttributeSet>();
 
+		//9-3
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitResult.GetActor());
+		if (!SourceASC || !TargetASC)
+		{
+			ABGAS_LOG(LogABGAS, Error, TEXT("ASC not found!"));
+			return;
+		}
+		
 		//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect);
 		//7-12
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
 		if (EffectSpecHandle.IsValid())
 		{
-			EffectSpecHandle.Data->SetSetByCallerMagnitude(ABTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());
+			//EffectSpecHandle.Data->SetSetByCallerMagnitude(ABTAG_DATA_DAMAGE, -SourceAttribute->GetAttackRate());
 			ApplyGameplayEffectSpecToTarget(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, EffectSpecHandle, TargetDataHandle);
+
+			//9-3
+			FGameplayEffectContextHandle CueContextHandle = UAbilitySystemBlueprintLibrary::GetEffectContext(EffectSpecHandle);
+			//MakeOutgoingGameplayEffectSpec로 생성했을때 세부적인 값들은 지정해주지 않고 있음으로 현재 비어있는 상태 -> 직접 채워넣어 준다
+			CueContextHandle.AddHitResult(HitResult);
+			FGameplayCueParameters CueParam;
+			CueParam.EffectContext = CueContextHandle;
+
+			TargetASC->ExecuteGameplayCue(ABTAG_GAMEPLAYCUE_CHARACTER_ATTACKHIT, CueParam);
 		}
 
-		
+		//8-16
+		FGameplayEffectSpecHandle BuffEffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackBuffEffect);
+		if (BuffEffectSpecHandle.IsValid())
+		{
+			ApplyGameplayEffectSpecToOwner(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, BuffEffectSpecHandle);
+		}
 	}
 	
 	bool bReplicatedEndAbility = true;
