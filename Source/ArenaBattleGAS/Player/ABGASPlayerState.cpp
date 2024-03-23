@@ -4,6 +4,7 @@
 #include "Player/ABGASPlayerState.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/ABCharacterAttributeSet.h"
+#include "Attribute/ABCharacterSkillAttributeSet.h" //10-12
 
 AABGASPlayerState::AABGASPlayerState()
 {
@@ -13,6 +14,10 @@ AABGASPlayerState::AABGASPlayerState()
 
 	//6-4
 	AttributeSet = CreateDefaultSubobject<UABCharacterAttributeSet>(TEXT("AttributeSet"));
+
+	//10-12
+	SkillAttributeSet = CreateDefaultSubobject<UABCharacterSkillAttributeSet>(TEXT("SkillAttributeSet"));
+
 }
 
 UAbilitySystemComponent* AABGASPlayerState::GetAbilitySystemComponent() const

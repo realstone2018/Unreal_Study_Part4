@@ -25,6 +25,9 @@ public:
 	//3-6
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//10-1
+	FORCEINLINE virtual class UAnimMontage* GetSkillActionMontage() const { return SkillActionMontage; }
+	
 protected:
 	//3-6
 	void SetupGasInputComponent();
@@ -64,7 +67,16 @@ protected:
 	float WeaponRange;	
 
 	UPROPERTY(EditAnywhere, Category = Weapon)
-	float WeaponAttackRate;		
+	float WeaponAttackRate;
+
+	//10-1
+	//생성할 스킬 GA 클래스
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayAbility> SkillAbilityClass;
+
+	//스킬 애니메이션 몽타주
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animation)
+	TObjectPtr<class UAnimMontage> SkillActionMontage;
 };
 
 

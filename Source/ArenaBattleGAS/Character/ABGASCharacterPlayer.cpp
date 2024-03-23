@@ -44,6 +44,13 @@ AABGASCharacterPlayer::AABGASCharacterPlayer()
 	}
 	WeaponRange = 75.f;
 	WeaponAttackRate = 100.0f;
+
+	//10-1
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SkillActionMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/ArenaBattleGAS/Animation/AM_SkillAttack.AM_SkillAttack'"));
+	if (SkillActionMontageRef.Object)
+	{
+		SkillActionMontage = SkillActionMontageRef.Object;
+	}
 }
 
 UAbilitySystemComponent* AABGASCharacterPlayer::GetAbilitySystemComponent() const
@@ -123,7 +130,7 @@ void AABGASCharacterPlayer::SetupGasInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AABGASCharacterPlayer::GASInputReleased, 0);
 		//3-7
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AABGASCharacterPlayer::GASInputPressed, 1);
-
+		EnhancedInputComponent->BindAction(SkillAction, ETriggerEvent::Triggered, this, &AABGASCharacterPlayer::GASInputPressed, 2);
 	}	
 }
 
@@ -168,6 +175,14 @@ void AABGASCharacterPlayer::EquipWeapon(const FGameplayEventData* EventData)
 	{
 		Weapon->SetSkeletalMesh(WeaponMesh);
 
+		//10-1 스킬 GA가 아직 부여되지 않았다면 부여
+		if (!ASC->FindAbilitySpecFromClass(SkillAbilityClass))
+		{
+			FGameplayAbilitySpec NewSkillSpec(SkillAbilityClass);
+			NewSkillSpec.InputID = 2;
+			ASC->GiveAbility(NewSkillSpec);
+		}
+		
 		//권장하는 방법은 아니지만 GE없이 GA에 직접 접근하여 스탯 변경 (이런 방식도 있다 예제)
 		const float CurrentAttackRange = ASC->GetNumericAttributeBase(UABCharacterAttributeSet::GetAttackRangeAttribute());
 		const float CurrentAttackRate = ASC->GetNumericAttributeBase(UABCharacterAttributeSet::GetAttackRateAttribute());
@@ -190,6 +205,12 @@ void AABGASCharacterPlayer::UnequipWeapon(const FGameplayEventData* EventData)
 		ASC->SetNumericAttributeBase(UABCharacterAttributeSet::GetAttackRangeAttribute(), CurrentAttackRange - WeaponRange);
 		ASC->SetNumericAttributeBase(UABCharacterAttributeSet::GetAttackRateAttribute(), CurrentAttackRate - WeaponAttackRate);
 
+		//10-1 스킬 GA 제거
+		FGameplayAbilitySpec* SkillAbilitySpec = ASC->FindAbilitySpecFromClass(SkillAbilityClass);
+		if (SkillAbilitySpec)
+		{
+			ASC->ClearAbility(SkillAbilitySpec->Handle);
+		}
 	}
 }
 

@@ -173,7 +173,8 @@
       <workItem from="1710743028215" duration="287000" />
       <workItem from="1710743351996" duration="4916000" />
       <workItem from="1710753067558" duration="646000" />
-      <workItem from="1710838544591" duration="14098000" />
+      <workItem from="1710838544591" duration="24720000" />
+      <workItem from="1710936027625" duration="3117000" />
     </task>
     <servers />
   </component>
@@ -183,5 +184,21 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ArenaBattleGAS/GA/AT/ABAT_Trace.cpp</url>
+          <line>68</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ArenaBattleGAS/GA/AT/ABAT_Trace.cpp</url>
+          <line>18</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
